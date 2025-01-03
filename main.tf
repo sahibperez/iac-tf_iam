@@ -1,14 +1,14 @@
 terraform {
   required_providers {
-      aws = {
-          source = "hashicorp/aws"
-          version = "~> 5.82.2"
-      }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.82.2"
+    }
   }
 }
 
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
 }
 
 resource "aws_iam_group" "my_iam_group" {
@@ -21,7 +21,13 @@ resource "aws_iam_group_policy_attachment" "group_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess"
 }
 
-resource "aws_iam_user" "my_iam_user1" {
+# IAM user resource
+resource "aws_iam_user" "users" {
+  for_each = toset(var.user_names)
+  name     = each.key
+}
+
+/*resource "aws_iam_user" "my_iam_user1" {
   name = "testgibran"
   path = "/"
 
@@ -58,10 +64,10 @@ resource "aws_iam_user_policy_attachment" "user_attachment2" {
 }
 
 resource "aws_iam_group_membership" "group_membership" {
-  name = "my-membership"
+  name  = "my-membership"
   group = aws_iam_group.my_iam_group.name
   users = [
     aws_iam_user.my_iam_user1.name,
     aws_iam_user.my_iam_user2.name,
   ]
-}
+}*/
